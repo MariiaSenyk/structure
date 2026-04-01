@@ -77,6 +77,7 @@ int main() {
         addToEnd(head, cityName, distanceFromKyiv);
     }
 
+
     showTwoFarthest(head);
 
     addToEnd(head, "Warsaw", 790);
