@@ -5,8 +5,7 @@ using namespace std;
 
 const string MEDIA_AUDIO_CASSETTE = "audio cassette";
 
-struct MusicWork
-{
+struct MusicWork {
     string mediaType;
     string title;
     string performerName;
@@ -15,26 +14,22 @@ struct MusicWork
     double price;
 };
 
-struct MusicStackNode
-{
+struct MusicStackNode {
     MusicWork musicData;
-    MusicStackNode* nextNode;
+    MusicStackNode *nextNode;
 };
 
-void pushToMusicStack(MusicStackNode*& topNode, MusicWork newMusicWork)
-{
-    MusicStackNode* newNode = new MusicStackNode;
+void pushToMusicStack(MusicStackNode *&topNode, MusicWork newMusicWork) {
+    MusicStackNode *newNode = new MusicStackNode;
     newNode->musicData = newMusicWork;
     newNode->nextNode = topNode;
     topNode = newNode;
 }
 
-void printMusicStack(MusicStackNode* topNode)
-{
-    MusicStackNode* currentNode = topNode;
+void printMusicStack(MusicStackNode *topNode) {
+    MusicStackNode *currentNode = topNode;
 
-    while (currentNode != nullptr)
-    {
+    while (currentNode != nullptr) {
         cout << "Title: " << currentNode->musicData.title << endl;
         cout << "Performer: " << currentNode->musicData.performerName << endl;
         cout << "Media type: " << currentNode->musicData.mediaType << endl;
@@ -47,15 +42,12 @@ void printMusicStack(MusicStackNode* topNode)
     }
 }
 
-double calculateTotalPlayingTimeForPerformer(MusicStackNode* topNode, string requiredPerformerName)
-{
+double calculateTotalPlayingTimeForPerformer(MusicStackNode *topNode, string requiredPerformerName) {
     double totalPlayingTime = 0;
-    MusicStackNode* currentNode = topNode;
+    MusicStackNode *currentNode = topNode;
 
-    while (currentNode != nullptr)
-    {
-        if (currentNode->musicData.performerName == requiredPerformerName)
-        {
+    while (currentNode != nullptr) {
+        if (currentNode->musicData.performerName == requiredPerformerName) {
             totalPlayingTime += currentNode->musicData.playingTime;
         }
 
@@ -65,16 +57,13 @@ double calculateTotalPlayingTimeForPerformer(MusicStackNode* topNode, string req
     return totalPlayingTime;
 }
 
-double calculateAveragePriceOfAudioCassettes(MusicStackNode* topNode)
-{
+double calculateAveragePriceOfAudioCassettes(MusicStackNode *topNode) {
     double totalPrice = 0;
     int numberOfAudioCassettes = 0;
-    MusicStackNode* currentNode = topNode;
+    MusicStackNode *currentNode = topNode;
 
-    while (currentNode != nullptr)
-    {
-        if (currentNode->musicData.mediaType == MEDIA_AUDIO_CASSETTE)
-        {
+    while (currentNode != nullptr) {
+        if (currentNode->musicData.mediaType == MEDIA_AUDIO_CASSETTE) {
             totalPrice += currentNode->musicData.price;
             numberOfAudioCassettes++;
         }
@@ -82,27 +71,23 @@ double calculateAveragePriceOfAudioCassettes(MusicStackNode* topNode)
         currentNode = currentNode->nextNode;
     }
 
-    if (numberOfAudioCassettes == 0)
-    {
+    if (numberOfAudioCassettes == 0) {
         return 0;
     }
 
     return totalPrice / numberOfAudioCassettes;
 }
 
-void deleteEntireMusicStack(MusicStackNode*& topNode)
-{
-    while (topNode != nullptr)
-    {
-        MusicStackNode* nodeToDelete = topNode;
+void deleteEntireMusicStack(MusicStackNode *&topNode) {
+    while (topNode != nullptr) {
+        MusicStackNode *nodeToDelete = topNode;
         topNode = topNode->nextNode;
         delete nodeToDelete;
     }
 }
 
-int main()
-{
-    MusicStackNode* topNode = nullptr;
+int main() {
+    MusicStackNode *topNode = nullptr;
     int numberOfMusicWorks;
     string requiredPerformerName;
 
@@ -110,8 +95,7 @@ int main()
     cin >> numberOfMusicWorks;
     cin.ignore();
 
-    for (int musicWorkIndex = 0; musicWorkIndex < numberOfMusicWorks; musicWorkIndex++)
-    {
+    for (int musicWorkIndex = 0; musicWorkIndex < numberOfMusicWorks; musicWorkIndex++) {
         MusicWork newMusicWork;
 
         cout << "Enter media type: ";
@@ -143,10 +127,10 @@ int main()
     getline(cin, requiredPerformerName);
 
     cout << "Total playing time for performer: "
-         << calculateTotalPlayingTimeForPerformer(topNode, requiredPerformerName) << endl;
+            << calculateTotalPlayingTimeForPerformer(topNode, requiredPerformerName) << endl;
 
     cout << "Average price of audio cassettes: "
-         << calculateAveragePriceOfAudioCassettes(topNode) << endl;
+            << calculateAveragePriceOfAudioCassettes(topNode) << endl;
 
     deleteEntireMusicStack(topNode);
 

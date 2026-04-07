@@ -3,65 +3,73 @@
 
 using namespace std;
 
-struct Node {
-    string carName;
-    int productionYear;
-    int price;
-    Node *next;
+struct Car {
+    string name;
+    int year;
+    double price;
+    Car *next;
 };
 
-void addToEnd(Node *&head, string carName, int productionYear, int price) {
-    Node *newNode = new Node{carName, productionYear, price, nullptr};
-
-    if (head == nullptr) {
-        head = newNode;
-        return;
-    }
-
-    Node *currentNode = head;
-    while (currentNode->next != nullptr) {
-        currentNode = currentNode->next;
-    }
-
-    currentNode->next = newNode;
+void addCar(Car *&head, const string &name, int year, double price) {
+    Car *newCar = new Car;
+    newCar->name = name;
+    newCar->year = year;
+    newCar->price = price;
+    newCar->next = head;
+    head = newCar;
 }
 
-void showCars(Node *head) {
+void printOldCheapCars(Car *head) {
     int currentYear = 2026;
-
-    while (head != nullptr) {
-        if (currentYear - head->productionYear > 10 && head->price < 5000) {
-            cout << head->carName << " " << head->productionYear << " " << head->price << endl;
+    bool found = false;
+    cout << "\nList of cars older than 10 years and costing less than 5000 USD:\n";
+    for (Car *temp = head; temp != nullptr; temp = temp->next) {
+        if (currentYear - temp->year > 10 && temp->price < 5000) {
+            cout << "Name: " << temp->name << " | Year: " << temp->year << " | Price: " << temp->price << " USD" <<
+                    endl;
+            found = true;
         }
-
-        head = head->next;
+    }
+    if (!found) {
+        cout << "\nNo cars found that match the criteria.\n";
     }
 }
 
-void deleteList(Node *&head) {
+void deleteList(Car *head) {
     while (head != nullptr) {
-        Node *tempNode = head;
+        Car *temp = head;
         head = head->next;
-        delete tempNode;
+        delete temp;
     }
 }
 
 int main() {
-    Node *head = nullptr;
-    int carCount;
+    Car *head = nullptr;
+    int n;
 
-    cin >> carCount;
+    cout << "Enter the number of cars: ";
+    cin >> n;
 
-    for (int index = 0; index < carCount; index++) {
-        string carName;
-        int productionYear;
-        int price;
-        cin >> carName >> productionYear >> price;
-        addToEnd(head, carName, productionYear, price);
+    for (int i = 0; i < n; ++i) {
+        string name;
+        int year;
+        double price;
+
+        cout << "\nEnter the name of car #" << i + 1 << ": ";
+        cin.ignore();
+        getline(cin, name);
+
+        cout << "Enter the year of manufacture: ";
+        cin >> year;
+
+        cout << "Enter the price of the car (in USD): ";
+        cin >> price;
+
+        addCar(head, name, year, price);
     }
 
-    showCars(head);
-    deleteList(head);
+    printOldCheapCars(head);
 
+    deleteList(head);
     return 0;
 }

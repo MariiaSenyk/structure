@@ -97,7 +97,7 @@ int main() {
     addToBeginning(head, 20);
     addToEnd(head, 40);
     addToMiddle(head, 30);
-    addToBeginning(head, 10);
+    addToBeginning(head, 9);
 
     printList(head);
     cout << findAverage(head) << endl;

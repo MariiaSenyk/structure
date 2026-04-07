@@ -3,86 +3,76 @@
 
 using namespace std;
 
-struct Node {
-    string cityName;
-    int distanceFromKyiv;
-    Node *next;
+struct City {
+    string name;
+    int distance;
+    City *next;
 };
 
-void addToEnd(Node *&head, string cityName, int distanceFromKyiv) {
-    Node *newNode = new Node{cityName, distanceFromKyiv, nullptr};
-
-    if (head == nullptr) {
-        head = newNode;
-        return;
-    }
-
-    Node *currentNode = head;
-    while (currentNode->next != nullptr) {
-        currentNode = currentNode->next;
-    }
-
-    currentNode->next = newNode;
+void addCity(City *&head, const string &name, int distance) {
+    City *newCity = new City;
+    newCity->name = name;
+    newCity->distance = distance;
+    newCity->next = head;
+    head = newCity;
 }
 
-void showTwoFarthest(Node *head) {
-    if (head == nullptr || head->next == nullptr) {
-        return;
-    }
+void printFarthestCities(City *head) {
+    City *city1 = nullptr, *city2 = nullptr;
+    int maxDistance1 = -1, maxDistance2 = -1;
 
-    Node *firstCity = head;
-    Node *secondCity = head->next;
-
-    if (secondCity->distanceFromKyiv > firstCity->distanceFromKyiv) {
-        Node *tempNode = firstCity;
-        firstCity = secondCity;
-        secondCity = tempNode;
-    }
-
-    head = head->next->next;
-
-    while (head != nullptr) {
-        if (head->distanceFromKyiv > firstCity->distanceFromKyiv) {
-            secondCity = firstCity;
-            firstCity = head;
-        } else if (head->distanceFromKyiv > secondCity->distanceFromKyiv) {
-            secondCity = head;
+    for (City *temp = head; temp != nullptr; temp = temp->next) {
+        if (temp->distance > maxDistance1) {
+            maxDistance2 = maxDistance1;
+            city2 = city1;
+            maxDistance1 = temp->distance;
+            city1 = temp;
+        } else if (temp->distance > maxDistance2) {
+            maxDistance2 = temp->distance;
+            city2 = temp;
         }
-
-        head = head->next;
     }
 
-    cout << firstCity->cityName << endl;
-    cout << secondCity->cityName << endl;
+    cout << "Most distant cities from Kyiv:" << endl;
+    if (city1 != nullptr)
+        cout << city1->name << " (" << city1->distance << " km)" << endl;
+    if (city2 != nullptr)
+        cout << city2->name << " (" << city2->distance << " km)" << endl;
 }
 
-void deleteList(Node *&head) {
+void deleteList(City *head) {
     while (head != nullptr) {
-        Node *tempNode = head;
+        City *temp = head;
         head = head->next;
-        delete tempNode;
+        delete temp;
     }
 }
 
 int main() {
-    Node *head = nullptr;
-    int cityCount;
+    City *head = nullptr;
+    int n;
 
-    cin >> cityCount;
+    cout << "Enter the number of cities: ";
+    cin >> n;
 
-    for (int index = 0; index < cityCount; index++) {
-        string cityName;
-        int distanceFromKyiv;
-        cin >> cityName >> distanceFromKyiv;
-        addToEnd(head, cityName, distanceFromKyiv);
+    for (int i = 0; i < n; ++i) {
+        string name;
+        int distance;
+
+        cout << "Enter the name of city #" << i + 1 << ": ";
+        cin.ignore();
+        getline(cin, name);
+
+        cout << "Enter the distance to Kyiv from " << name << ": ";
+        cin >> distance;
+
+        addCity(head, name, distance);
     }
 
+    addCity(head, "Warsaw", 800);
 
-    showTwoFarthest(head);
-
-    addToEnd(head, "Warsaw", 790);
+    printFarthestCities(head);
 
     deleteList(head);
-
     return 0;
 }
