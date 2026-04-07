@@ -7,17 +7,18 @@ using namespace std;
 class Node {
 public:
     int data;
-    Node* left;
-    Node* right;
+    Node *left;
+    Node *right;
 
-    Node(int val) : data(val), left(nullptr), right(nullptr) {}
+    Node(int val) : data(val), left(nullptr), right(nullptr) {
+    }
 };
 
 class BinarySearchTree {
 private:
-    Node* root;
+    Node *root;
 
-    void insert(Node*& node, int val) {
+    void insert(Node *&node, int val) {
         if (node == nullptr) {
             node = new Node(val);
         } else if (val < node->data) {
@@ -27,21 +28,21 @@ private:
         }
     }
 
-    bool find(Node* node, int val) {
+    bool find(Node *node, int val) {
         if (node == nullptr) return false;
         if (node->data == val) return true;
         if (val < node->data) return find(node->left, val);
         return find(node->right, val);
     }
 
-    int depth(Node* node) {
+    int depth(Node *node) {
         if (node == nullptr) return 0;
         int left_depth = depth(node->left);
         int right_depth = depth(node->right);
         return max(left_depth, right_depth) + 1;
     }
 
-    void generateEvenOddTrees(Node* node, BinarySearchTree& evenTree, BinarySearchTree& oddTree) {
+    void generateEvenOddTrees(Node *node, BinarySearchTree &evenTree, BinarySearchTree &oddTree) {
         if (node == nullptr) return;
         if (node->data % 2 == 0) evenTree.insert(node->data);
         else oddTree.insert(node->data);
@@ -49,7 +50,7 @@ private:
         generateEvenOddTrees(node->right, evenTree, oddTree);
     }
 
-    void deleteTree(Node* node) {
+    void deleteTree(Node *node) {
         if (node == nullptr) return;
         deleteTree(node->left);
         deleteTree(node->right);
@@ -57,7 +58,8 @@ private:
     }
 
 public:
-    BinarySearchTree() : root(nullptr) {}
+    BinarySearchTree() : root(nullptr) {
+    }
 
     void insert(int val) {
         insert(root, val);
@@ -71,7 +73,7 @@ public:
         return depth(root);
     }
 
-    void generateEvenOddTrees(BinarySearchTree& evenTree, BinarySearchTree& oddTree) {
+    void generateEvenOddTrees(BinarySearchTree &evenTree, BinarySearchTree &oddTree) {
         generateEvenOddTrees(root, evenTree, oddTree);
     }
 

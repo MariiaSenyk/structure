@@ -4,7 +4,7 @@ using namespace std;
 
 class Graph {
 private:
-    vector<vector<int>> adjMatrix;
+    vector<vector<int> > adjMatrix;
     int numVertices;
 
 public:
@@ -17,8 +17,8 @@ public:
         adjMatrix[v][u] = weight;
     }
 
-    vector<vector<int>> getAdjacencyList() {
-        vector<vector<int>> adjList(numVertices);
+    vector<vector<int> > getAdjacencyList() {
+        vector<vector<int> > adjList(numVertices);
         for (int i = 0; i < numVertices; ++i) {
             for (int j = 0; j < numVertices; ++j) {
                 if (adjMatrix[i][j] != 0) {
@@ -51,7 +51,7 @@ public:
                 }
             }
         }
-        return (count == 0) ? 0 : (double)totalDistance / count;
+        return (count == 0) ? 0 : (double) totalDistance / count;
     }
 
     void checkIsolated() {
@@ -126,11 +126,11 @@ int main() {
     g.addEdge(2, 5, 4);
     g.addEdge(3, 5, 7);
 
-    vector<vector<int>> adjList = g.getAdjacencyList();
+    vector<vector<int> > adjList = g.getAdjacencyList();
     cout << "Adjacency List:\n";
     for (int i = 0; i < adjList.size(); ++i) {
         cout << "Vertex " << i + 1 << ": ";
-        for (int j : adjList[i]) {
+        for (int j: adjList[i]) {
             cout << j + 1 << " ";
         }
         cout << endl;

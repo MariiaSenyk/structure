@@ -6,22 +6,24 @@ using namespace std;
 struct Node {
     string date;
     float temperature;
-    Node* next;
-    Node* prev;
+    Node *next;
+    Node *prev;
 
-    Node(string d, float temp) : date(d), temperature(temp), next(nullptr), prev(nullptr) {}
+    Node(string d, float temp) : date(d), temperature(temp), next(nullptr), prev(nullptr) {
+    }
 };
 
 class DoublyLinkedList {
 private:
-    Node* head;
-    Node* tail;
+    Node *head;
+    Node *tail;
 
 public:
-    DoublyLinkedList() : head(nullptr), tail(nullptr) {}
+    DoublyLinkedList() : head(nullptr), tail(nullptr) {
+    }
 
     void append(string date, float temperature) {
-        Node* newNode = new Node(date, temperature);
+        Node *newNode = new Node(date, temperature);
         if (!head) {
             head = tail = newNode;
         } else {
@@ -31,7 +33,7 @@ public:
         }
     }
 
-    void merge(DoublyLinkedList& otherList) {
+    void merge(DoublyLinkedList &otherList) {
         if (!head) {
             head = otherList.head;
             tail = otherList.tail;
@@ -44,11 +46,11 @@ public:
         }
     }
 
-    void findMaxMin(float& maxTemp, float& minTemp) {
+    void findMaxMin(float &maxTemp, float &minTemp) {
         if (!head) return;
 
         maxTemp = minTemp = head->temperature;
-        Node* current = head->next;
+        Node *current = head->next;
         while (current) {
             if (current->temperature > maxTemp) maxTemp = current->temperature;
             if (current->temperature < minTemp) minTemp = current->temperature;
@@ -57,9 +59,9 @@ public:
     }
 
     void freeMemory() {
-        Node* current = head;
+        Node *current = head;
         while (current) {
-            Node* nextNode = current->next;
+            Node *nextNode = current->next;
             delete current;
             current = nextNode;
         }
@@ -67,7 +69,7 @@ public:
     }
 
     void printList() {
-        Node* current = head;
+        Node *current = head;
         while (current) {
             cout << current->date << " - " << current->temperature << "°C" << endl;
             current = current->next;
