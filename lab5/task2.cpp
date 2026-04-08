@@ -59,7 +59,7 @@ int main() {
         string name;
         int distance;
 
-        cout << "Enter the name of city #" << i + 1 << ": ";
+        cout << "Enter the name of city " << i + 1 << ": ";
         cin.ignore();
         getline(cin, name);
 
