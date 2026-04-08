@@ -4,7 +4,7 @@
 using namespace std;
 
 const int stackSize = 10;
-const double minValue = -6.0;
+const double minValue = -5.0;
 const double maxValue = 11.0;
 
 struct RealNumberStackNode {
