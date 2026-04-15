@@ -188,10 +188,9 @@ int main() {
     int firstVertex = -1;
     int secondVertex = -1;
     int longest = findLongestPath(matrix, firstVertex, secondVertex);
+    findShortestRout(matrix, 2, false);
+    cout << "---------------------------------------" << endl;
     cout << "Longest Path: " << longest << " | With vertex: " << firstVertex + 1 << " and " << secondVertex + 1 <<
             endl;
-    cout << "---------------------------------------" << endl;
-    findShortestRout(matrix, 2, false);
-
     return 0;
 }
