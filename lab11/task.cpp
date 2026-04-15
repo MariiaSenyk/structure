@@ -1,12 +1,12 @@
 #include <iostream>
+#include <list>
 #include <vector>
 using namespace std;
 
 static void showGraph(const vector<vector<int> > &matrix) {
     for (const auto &row: matrix) {
-        for (const auto col: row) {
+        for (const auto col: row)
             cout << col << " ";
-        }
         cout << endl;
     }
 }
@@ -14,20 +14,17 @@ static void showGraph(const vector<vector<int> > &matrix) {
 static void createConnectList(vector<vector<int> > &matrix, vector<vector<int> > &list, bool showList) {
     for (int i = 0; i < matrix.size(); i++) {
         list.push_back({});
-        if (showList) {
+        if (showList)
             cout << "Vertex " << i + 1 << ": ";
-        }
         for (int j = 0; j < matrix[i].size(); j++) {
             if (matrix[i][j] != 0) {
                 list[i].push_back(j + 1);
-                if (showList) {
+                if (showList)
                     cout << j + 1 << " ";
-                }
             }
         }
-        if (showList) {
+        if (showList)
             cout << endl;
-        }
     }
 }
 
@@ -35,9 +32,8 @@ int countEdges(const vector<vector<int> > &matrix) {
     int edges = 0;
     for (int i = 0; i < matrix.size(); i++) {
         for (int j = 0; j < matrix[i].size(); j++) {
-            if (matrix[i][j] != 0) {
+            if (matrix[i][j] != 0)
                 edges++;
-            }
         }
     }
     return edges / 2;
@@ -175,18 +171,18 @@ int main() {
         {0, 0, 8, 0, 0, 0, 11},
         {10, 0, 0, 0, 0, 11, 0},
     };
-    cout << "-----Adjacency matrix-----" << endl;
+    cout << "------------Adjacency matrix------------" << endl;
     showGraph(matrix);
-    cout << "---------Vertices---------" << endl;
+    cout << "----------------Vertices----------------" << endl;
     createConnectList(matrix, listOfConnect, true);
-    cout << "--------------------------" << endl;
+    cout << "---------------------------------------- " << endl;
     cout << "Edges in graph: " << countEdges(matrix) << endl;
-    cout << "--------------------------" << endl;
+    cout <<"----------------------------------------"<< endl;
     int maxPow = 0;
     int minPow = matrix.size();
     calculatePowOfVertex(matrix, maxPow, minPow);
-    cout << "--------------------------" << endl;
-    cout << "Similar pow:\n";
+    cout << "----------------------------------------" << endl;
+    cout << "Vertices with the same number of links:"<<endl;;
     haveSimilarPow(matrix);
     cout << "---------------------------------------" << endl;
     int firstVertex = -1;
