@@ -1,5 +1,4 @@
 #include <iostream>
-#include <list>
 #include <vector>
 using namespace std;
 
@@ -182,5 +181,6 @@ int main() {
     cout << "---------------------------------------" << endl;
     cout << "Longest Path: " << longest << " | With vertex: " << firstVertex + 1 << " and " << secondVertex + 1 <<
             endl;
+
     return 0;
 }
