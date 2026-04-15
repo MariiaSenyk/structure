@@ -80,7 +80,6 @@ void haveSimilarPow(vector<vector<int> > &matrix) {
     }
 }
 
-
 static bool containsValue(const vector<int> &list, const int value) {
     for (const int i: list) {
         if (i == value) {
