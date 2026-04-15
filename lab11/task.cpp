@@ -2,8 +2,7 @@
 #include <vector>
 using namespace std;
 
-static void showGraph(const vector<vector<int> > &matrix)
-{
+static void showGraph(const vector<vector<int> > &matrix) {
     for (const auto &row: matrix) {
         for (const auto col: row) {
             cout << col << " ";
@@ -44,6 +43,20 @@ int countEdges(const vector<vector<int> > &matrix) {
     return edges / 2;
 }
 
+int findLongestPath(vector<vector<int> > &matrix, int &firstVertex, int &secondVertex) {
+    int longest = 0;
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix[i].size(); j++) {
+            if (matrix[i][j] > longest) {
+                longest = matrix[i][j];
+                firstVertex = i;
+                secondVertex = j;
+            }
+        }
+    }
+    return longest;
+}
+
 void calculatePowOfVertex(vector<vector<int> > &matrix, int &max, int &min) {
     vector<vector<int> > listOfConnect;
     createConnectList(matrix, listOfConnect, false);
@@ -71,25 +84,6 @@ void haveSimilarPow(vector<vector<int> > &matrix) {
     }
 }
 
-int findLongestPath(vector<vector<int> > &matrix, int &firstVertex, int &secondVertex) {
-    int longest = 0;
-    for (int i = 0; i < matrix.size(); i++) {
-        for (int j = 0; j < matrix[i].size(); j++) {
-            if (matrix[i][j] > longest) {
-                longest = matrix[i][j];
-                firstVertex = i;
-                secondVertex = j;
-            }
-        }
-    }
-    return longest;
-}
-
-static void showVector(const vector<int> v) {
-    for (auto i: v) {
-        cout << i << " ";
-    }
-}
 
 static bool containsValue(const vector<int> &list, const int value) {
     for (const int i: list) {
@@ -98,6 +92,12 @@ static bool containsValue(const vector<int> &list, const int value) {
         }
     }
     return false;
+}
+
+static void showVector(const vector<int> v) {
+    for (auto i: v) {
+        cout << i << " ";
+    }
 }
 
 static void testFunction(const vector<vector<int> > &matrix,
@@ -164,10 +164,8 @@ static void findShortestRout(const vector<vector<int> > &matrix, int edges, bool
     cout << endl;
 }
 
-int main()
-{
+int main() {
     vector<vector<int> > listOfConnect = {};
-
     vector<vector<int> > matrix = {
         {0, 0, 3, 0, 0, 0, 10},
         {0, 0, 6, 1, 0, 0, 0},
