@@ -9,60 +9,46 @@ struct Node {
     string name;
     Node *left;
     Node *right;
-} *root;
+} *root = nullptr;
 
 struct NodeHeight {
     int height;
     NodeHeight *left;
     NodeHeight *right;
-} *rootNew;
+} *rootNew = nullptr;
 
-void addNode(Node *&r, int h, string n) {
+void addNode(Node *&r, int h, const string &n) {
     if (r == nullptr) {
-        Node *c = new Node;
-        c->height = h;
-        c->name = n;
-        c->left = nullptr;
-        c->right = nullptr;
-        r = c;
+        r = new Node{h, n, nullptr, nullptr};
         return;
     }
-    if (h < r->height) {
+    if (h < r->height)
         addNode(r->left, h, n);
-    } else {
+    else
         addNode(r->right, h, n);
-    }
 }
 
 void addNodeHeight(NodeHeight *&r, int h) {
     if (r == nullptr) {
-        NodeHeight *c = new NodeHeight;
-        c->height = h;
-        c->left = nullptr;
-        c->right = nullptr;
-        r = c;
+        r = new NodeHeight{h, nullptr, nullptr};
         return;
     }
-    if (h < r->height) {
+    if (h < r->height)
         addNodeHeight(r->left, h);
-    } else {
+    else
         addNodeHeight(r->right, h);
-    }
 }
 
 void findAndCountName(Node *r, const string &targetName, int &count) {
     if (r == nullptr) return;
-    if (r->name == targetName) {
+    if (r->name == targetName)
         count++;
-    }
-
     findAndCountName(r->left, targetName, count);
     findAndCountName(r->right, targetName, count);
 }
 
 void buildNewTreeFromLeftSubtree(Node *source, NodeHeight *&destRoot) {
     if (source == nullptr) return;
-
     addNodeHeight(destRoot, source->height);
     buildNewTreeFromLeftSubtree(source->left, destRoot);
     buildNewTreeFromLeftSubtree(source->right, destRoot);
@@ -70,16 +56,12 @@ void buildNewTreeFromLeftSubtree(Node *source, NodeHeight *&destRoot) {
 
 int getDepth(Node *r) {
     if (r == nullptr) return 0;
-    int leftD = getDepth(r->left);
-    int rightD = getDepth(r->right);
-    return (leftD > rightD) ? leftD + 1 : rightD + 1;
+    return 1 + max(getDepth(r->left), getDepth(r->right));
 }
 
 int getDepthNew(NodeHeight *r) {
     if (r == nullptr) return 0;
-    int leftD = getDepthNew(r->left);
-    int rightD = getDepthNew(r->right);
-    return (leftD > rightD) ? leftD + 1 : rightD + 1;
+    return 1 + max(getDepthNew(r->left), getDepthNew(r->right));
 }
 
 int countNodes(Node *r) {
@@ -93,31 +75,26 @@ int countNodesNew(NodeHeight *r) {
 }
 
 void deleteTree(Node *&r) {
-    if (r != nullptr) {
-        deleteTree(r->left);
-        deleteTree(r->right);
-        delete r;
-        r = nullptr;
-    }
+    if (r == nullptr) return;
+    deleteTree(r->left);
+    deleteTree(r->right);
+    delete r;
+    r = nullptr;
 }
 
 void deleteTreeNew(NodeHeight *&r) {
-    if (r != nullptr) {
-        deleteTreeNew(r->left);
-        deleteTreeNew(r->right);
-        delete r;
-        r = nullptr;
-    }
+    if (r == nullptr) return;
+    deleteTreeNew(r->left);
+    deleteTreeNew(r->right);
+    delete r;
+    r = nullptr;
 }
 
 int main() {
-    srand(time(NULL));
-
-    root = nullptr;
-    rootNew = nullptr;
+    srand(time(nullptr));
 
     int n;
-    cout << "Vvedit kilkist vuzliv: ";
+    cout << "Enter number of nodes: ";
     cin >> n;
 
     string sampleNames[] = {"Ivan", "Oleg", "Anna", "Maria", "Petro", "Olena", "Max"};
@@ -128,40 +105,39 @@ int main() {
         string randomName = sampleNames[rand() % namesCount];
         addNode(root, randomHeight, randomName);
     }
-    cout << "Derevo zgenerovano\n";
+    cout << "Tree generated successfully.\n";
 
     string searchName;
-    cout << "\nVvedit im'ya dlia poshuku: ";
+    cout << "\nEnter name to search for: ";
     cin >> searchName;
 
     int nameCount = 0;
     findAndCountName(root, searchName, nameCount);
 
     if (nameCount > 0) {
-        cout << "Imya '" << searchName << "' isnuye u derevi\n";
-        cout << "Kilkist vhodzhen: " << nameCount << "\n";
+        cout << "Name '" << searchName << "' exists in the tree.\n";
+        cout << "Number of occurrences: " << nameCount << "\n";
     } else {
-        cout << "Imya ne znaydeno\n";
+        cout << "Name not found.\n";
     }
 
     if (root != nullptr && root->left != nullptr) {
         buildNewTreeFromLeftSubtree(root->left, rootNew);
-        cout << "\nNove derevo z livogo piddereva sformovano\n";
+        cout << "\nNew tree built from the left subtree.\n";
     } else {
-        cout << "\nLivoho piddereva ne isnuye, nove derevo porozhnie\n";
+        cout << "\nLeft subtree does not exist. New tree is empty.\n";
     }
 
-    cout << "Pochatkove derevo:\n";
-    cout << "  Kilkist vuzliv: " << countNodes(root) << '\n';
-    cout << "  Glybyna: " << getDepth(root) << '\n';
+    cout << "\nOriginal tree:\n";
+    cout << "  Number of nodes: " << countNodes(root) << '\n';
+    cout << "  Depth: " << getDepth(root) << '\n';
 
-    cout << "Nove derevo (tilky zrist):\n";
-    cout << "  Kilkist vuzliv: " << countNodesNew(rootNew) << '\n';
-    cout << "  Glybyna: " << getDepthNew(rootNew) << '\n';
+    cout << "\nNew tree (heights only):\n";
+    cout << "  Number of nodes: " << countNodesNew(rootNew) << '\n';
+    cout << "  Depth: " << getDepthNew(rootNew) << '\n';
 
     deleteTree(root);
     deleteTreeNew(rootNew);
-
 
     return 0;
 }
