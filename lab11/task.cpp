@@ -109,7 +109,6 @@ static void testFunction(const vector<vector<int> > &matrix,
         lastVariant = visitedVertex;
     }
 
-
     for (int j = 0; j < matrix.size(); j++) {
         if (!containsValue(visitedVertex, j) && matrix[currentVertex][j] != 0) {
             currentSum += matrix[currentVertex][j];
@@ -143,15 +142,7 @@ static void findShortestRout(const vector<vector<int> > &matrix, int edges, bool
 
     for (int i = 0; i < matrix.size(); i++) {
         if (show) { cout << "next Vertex: " << i << endl; }
-        testFunction(
-            matrix,
-            i,
-            v,
-            edges,
-            0,
-            minSum,
-            lastVariant,
-            show);
+        testFunction(matrix,i,v,edges,0,minSum,lastVariant,show);
     }
     cout << "Minimal sum = " << minSum << endl;
     cout << "Vector: ";
