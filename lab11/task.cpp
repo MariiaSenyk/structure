@@ -1,143 +1,203 @@
 #include <iostream>
-#include <ctime>
-#include <string>
-
+#include <vector>
 using namespace std;
 
-struct Node {
-    int height;
-    string name;
-    Node *left;
-    Node *right;
-} *root = nullptr;
+static void showGraph(const vector<vector<int> > &matrix)
+{
+    for (const auto &row: matrix) {
+        for (const auto col: row) {
+            cout << col << " ";
+        }
+        cout << endl;
+    }
+}
 
-struct NodeHeight {
-    int height;
-    NodeHeight *left;
-    NodeHeight *right;
-} *rootNew = nullptr;
+static void createConnectList(vector<vector<int> > &matrix, vector<vector<int> > &list, bool showList) {
+    for (int i = 0; i < matrix.size(); i++) {
+        list.push_back({});
+        if (showList) {
+            cout << "Vertex " << i + 1 << ": ";
+        }
+        for (int j = 0; j < matrix[i].size(); j++) {
+            if (matrix[i][j] != 0) {
+                list[i].push_back(j + 1);
+                if (showList) {
+                    cout << j + 1 << " ";
+                }
+            }
+        }
+        if (showList) {
+            cout << endl;
+        }
+    }
+}
 
-void addNode(Node *&r, int h, const string &n) {
-    if (r == nullptr) {
-        r = new Node{h, n, nullptr, nullptr};
+int countEdges(const vector<vector<int> > &matrix) {
+    int edges = 0;
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix[i].size(); j++) {
+            if (matrix[i][j] != 0) {
+                edges++;
+            }
+        }
+    }
+    return edges / 2;
+}
+
+void calculatePowOfVertex(vector<vector<int> > &matrix, int &max, int &min) {
+    vector<vector<int> > listOfConnect;
+    createConnectList(matrix, listOfConnect, false);
+
+    for (auto row: listOfConnect) {
+        if (row.size() > max) {
+            max = row.size();
+        } else if (row.size() < min) {
+            min = row.size();
+        }
+    }
+    cout << "Maximum number of vertices: " << max << endl;
+    cout << "Minimum number of vertices: " << min << endl;
+}
+
+void haveSimilarPow(vector<vector<int> > &matrix) {
+    vector<vector<int> > listOfConnect;
+    createConnectList(matrix, listOfConnect, false);
+    for (int i = 0; i < listOfConnect.size(); i++) {
+        for (int j = i; j < listOfConnect.size(); j++) {
+            if (listOfConnect[i].size() == listOfConnect[j].size() && i != j) {
+                cout << "Vertex " << i + 1 << " with " << j + 1 << endl;
+            }
+        }
+    }
+}
+
+int findLongestPath(vector<vector<int> > &matrix, int &firstVertex, int &secondVertex) {
+    int longest = 0;
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix[i].size(); j++) {
+            if (matrix[i][j] > longest) {
+                longest = matrix[i][j];
+                firstVertex = i;
+                secondVertex = j;
+            }
+        }
+    }
+    return longest;
+}
+
+static void showVector(const vector<int> v) {
+    for (auto i: v) {
+        cout << i << " ";
+    }
+}
+
+static bool containsValue(const vector<int> &list, const int value) {
+    for (const int i: list) {
+        if (i == value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void testFunction(const vector<vector<int> > &matrix,
+                         int currentVertex,
+                         vector<int> visitedVertex,
+                         int needEdge,
+                         int currentSum,
+                         int &minSum,
+                         vector<int> &lastVariant,
+                         bool show) {
+    visitedVertex.push_back(currentVertex);
+    if (visitedVertex.size() - 1 == needEdge && minSum > currentSum) {
+        minSum = currentSum;
+        lastVariant = visitedVertex;
+    }
+
+
+    for (int j = 0; j < matrix.size(); j++) {
+        if (!containsValue(visitedVertex, j) && matrix[currentVertex][j] != 0) {
+            currentSum += matrix[currentVertex][j];
+            if (show) { cout << j << " " << currentSum << endl; }
+
+
+            testFunction(
+                matrix,
+                j,
+                visitedVertex,
+                needEdge,
+                currentSum,
+                minSum,
+                lastVariant,
+                show);
+            if (show) { cout << "reverse" << endl; }
+            currentSum -= matrix[currentVertex][j];
+        }
+    }
+}
+
+static void findShortestRout(const vector<vector<int> > &matrix, int edges, bool show) {
+    if (edges > matrix.size() - 1) {
+        cout << "Incorrect number of edges" << endl;
         return;
     }
-    if (h < r->height)
-        addNode(r->left, h, n);
-    else
-        addNode(r->right, h, n);
-}
+    vector<int> lastVariant = {};
+    int minSum = 1000000000;
+    vector<int> v = {};
 
-void addNodeHeight(NodeHeight *&r, int h) {
-    if (r == nullptr) {
-        r = new NodeHeight{h, nullptr, nullptr};
-        return;
+
+    for (int i = 0; i < matrix.size(); i++) {
+        if (show) { cout << "next Vertex: " << i << endl; }
+        testFunction(
+            matrix,
+            i,
+            v,
+            edges,
+            0,
+            minSum,
+            lastVariant,
+            show);
     }
-    if (h < r->height)
-        addNodeHeight(r->left, h);
-    else
-        addNodeHeight(r->right, h);
+    cout << "Minimal sum = " << minSum << endl;
+    cout << "Vector: ";
+    showVector(lastVariant);
+    cout << endl;
 }
 
-void findAndCountName(Node *r, const string &targetName, int &count) {
-    if (r == nullptr) return;
-    if (r->name == targetName)
-        count++;
-    findAndCountName(r->left, targetName, count);
-    findAndCountName(r->right, targetName, count);
-}
+int main()
+{
+    vector<vector<int> > listOfConnect = {};
 
-void buildNewTreeFromLeftSubtree(Node *source, NodeHeight *&destRoot) {
-    if (source == nullptr) return;
-    addNodeHeight(destRoot, source->height);
-    buildNewTreeFromLeftSubtree(source->left, destRoot);
-    buildNewTreeFromLeftSubtree(source->right, destRoot);
-}
-
-int getDepth(Node *r) {
-    if (r == nullptr) return 0;
-    return 1 + max(getDepth(r->left), getDepth(r->right));
-}
-
-int getDepthNew(NodeHeight *r) {
-    if (r == nullptr) return 0;
-    return 1 + max(getDepthNew(r->left), getDepthNew(r->right));
-}
-
-int countNodes(Node *r) {
-    if (r == nullptr) return 0;
-    return 1 + countNodes(r->left) + countNodes(r->right);
-}
-
-int countNodesNew(NodeHeight *r) {
-    if (r == nullptr) return 0;
-    return 1 + countNodesNew(r->left) + countNodesNew(r->right);
-}
-
-void deleteTree(Node *&r) {
-    if (r == nullptr) return;
-    deleteTree(r->left);
-    deleteTree(r->right);
-    delete r;
-    r = nullptr;
-}
-
-void deleteTreeNew(NodeHeight *&r) {
-    if (r == nullptr) return;
-    deleteTreeNew(r->left);
-    deleteTreeNew(r->right);
-    delete r;
-    r = nullptr;
-}
-
-int main() {
-    srand(time(nullptr));
-
-    int n;
-    cout << "Enter number of nodes: ";
-    cin >> n;
-
-    string sampleNames[] = {"Ivan", "Oleg", "Anna", "Maria", "Petro", "Olena", "Max"};
-    int namesCount = 7;
-
-    for (int i = 0; i < n; i++) {
-        int randomHeight = 150 + rand() % 51;
-        string randomName = sampleNames[rand() % namesCount];
-        addNode(root, randomHeight, randomName);
-    }
-    cout << "Tree generated successfully.\n";
-
-    string searchName;
-    cout << "\nEnter name to search for: ";
-    cin >> searchName;
-
-    int nameCount = 0;
-    findAndCountName(root, searchName, nameCount);
-
-    if (nameCount > 0) {
-        cout << "Name '" << searchName << "' exists in the tree.\n";
-        cout << "Number of occurrences: " << nameCount << "\n";
-    } else {
-        cout << "Name not found.\n";
-    }
-
-    if (root != nullptr && root->left != nullptr) {
-        buildNewTreeFromLeftSubtree(root->left, rootNew);
-        cout << "\nNew tree built from the left subtree.\n";
-    } else {
-        cout << "\nLeft subtree does not exist. New tree is empty.\n";
-    }
-
-    cout << "\nOriginal tree:\n";
-    cout << "  Number of nodes: " << countNodes(root) << '\n';
-    cout << "  Depth: " << getDepth(root) << '\n';
-
-    cout << "\nNew tree (heights only):\n";
-    cout << "  Number of nodes: " << countNodesNew(rootNew) << '\n';
-    cout << "  Depth: " << getDepthNew(rootNew) << '\n';
-
-    deleteTree(root);
-    deleteTreeNew(rootNew);
+    vector<vector<int> > matrix = {
+        {0, 0, 3, 0, 0, 0, 10},
+        {0, 0, 6, 1, 0, 0, 0},
+        {3, 6, 0, 5, 2, 8, 0},
+        {0, 1, 5, 0, 0, 0, 0},
+        {0, 0, 2, 0, 0, 0, 0},
+        {0, 0, 8, 0, 0, 0, 11},
+        {10, 0, 0, 0, 0, 11, 0},
+    };
+    cout << "-----Adjacency matrix-----" << endl;
+    showGraph(matrix);
+    cout << "---------Vertices---------" << endl;
+    createConnectList(matrix, listOfConnect, true);
+    cout << "--------------------------" << endl;
+    cout << "Edges in graph: " << countEdges(matrix) << endl;
+    cout << "--------------------------" << endl;
+    int maxPow = 0;
+    int minPow = matrix.size();
+    calculatePowOfVertex(matrix, maxPow, minPow);
+    cout << "--------------------------" << endl;
+    cout << "Similar pow:\n";
+    haveSimilarPow(matrix);
+    cout << "---------------------------------------" << endl;
+    int firstVertex = -1;
+    int secondVertex = -1;
+    int longest = findLongestPath(matrix, firstVertex, secondVertex);
+    cout << "Longest Path: " << longest << " | With vertex: " << firstVertex + 1 << " and " << secondVertex + 1 <<
+            endl;
+    cout << "---------------------------------------" << endl;
+    findShortestRout(matrix, 2, false);
 
     return 0;
 }
