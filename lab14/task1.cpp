@@ -1,8 +1,6 @@
 #include <iostream>
 #include <array>
-#include <algorithm>
-#include <numeric>
-#include <iomanip>
+
 using namespace std;
 
 int main() {
@@ -13,28 +11,59 @@ int main() {
         cin >> grades[i];
     }
 
-    double sum = accumulate(grades.begin(), grades.end(), 0);
-    double average = sum / 10;
-    cout << "Average grade: " << fixed << setprecision(2) << average << endl;
+    double sum = 0;
+    int max_grade = grades[0];
+    int min_grade = grades[0];
 
-    int max_grade = *max_element(grades.begin(), grades.end());
-    int min_grade = *min_element(grades.begin(), grades.end());
+    for (int i = 0; i < 10; i++) {
+        sum += grades[i];
+        if (grades[i] > max_grade) max_grade = grades[i];
+        if (grades[i] < min_grade) min_grade = grades[i];
+    }
+
+    double average = sum / 10;
+    cout << "Average grade: " << average << endl;
     cout << "Maximum grade: " << max_grade << endl;
     cout << "Minimum grade: " << min_grade << endl;
 
-    int above_average = count_if(grades.begin(), grades.end(),
-                                   [average](int g) { return g > average; });
+    int above_average = 0;
+    for (int i = 0; i < 10; i++) {
+        if (grades[i] > average) above_average++;
+    }
     cout << "Grades above average: " << above_average << endl;
 
     array<int, 10> ascending = grades;
-    sort(ascending.begin(), ascending.end());
+    for (int i = 0; i < 9; i++) {
+        for (int j = i + 1; j < 10; j++) {
+            if (ascending[i] > ascending[j]) {
+                int temp = ascending[i];
+                ascending[i] = ascending[j];
+                ascending[j] = temp;
+            }
+        }
+    }
+
     cout << "Ascending order: ";
-    for (int g: ascending) cout << g << " ";
+    for (int i = 0; i < 10; i++) {
+        cout << ascending[i] << " ";
+    }
     cout << endl;
+
     array<int, 10> descending = grades;
-    sort(descending.begin(), descending.end(), ::greater<int>());
+    for (int i = 0; i < 9; i++) {
+        for (int j = i + 1; j < 10; j++) {
+            if (descending[i] < descending[j]) {
+                int temp = descending[i];
+                descending[i] = descending[j];
+                descending[j] = temp;
+            }
+        }
+    }
+
     cout << "Descending order: ";
-    for (int g: descending) cout << g << " ";
+    for (int i = 0; i < 10; i++) {
+        cout << descending[i] << " ";
+    }
     cout << endl;
 
     return 0;

@@ -1,77 +1,65 @@
 #include <iostream>
-#include <map>
+#include <deque>
 #include <string>
 
 using namespace std;
 
 int main() {
-    multimap<string, string> phoneBook;
+    deque<string> queue;
     int choice;
-    string name, phone;
+    string request;
 
     do {
-        cout <<"\n1. Add contact\n2. Show numbers\n3. Delete number\n4. Delete all numbers\n5. Show all\n0. Exit\nChoice: ";
+        cout <<
+                "\n1. Add normal (back)\n2. Add urgent (front)\n3. Process\n4. Show queue\n5. Show size\n0. Exit\nChoice: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
-                cout << "Enter name: ";
-                cin >> name;
-                cout << "Enter phone: ";
-                cin >> phone;
-                phoneBook.insert(make_pair(name, phone));
-                cout << "Added\n";
+                cout << "Enter request: ";
+                cin.ignore();
+                getline(cin, request);
+                queue.push_back(request);
+                cout << "Added to back\n";
                 break;
 
-            case 2: {
-                cout << "Enter name: ";
-                cin >> name;
-                pair<multimap<string, string>::iterator, multimap<string, string>::iterator> range;
-                range = phoneBook.equal_range(name);
-                if (range.first == range.second) {
-                    cout << "No entries\n";
+            case 2:
+                cout << "Enter urgent request: ";
+                cin.ignore();
+                getline(cin, request);
+                queue.push_front(request);
+                cout << "Added to front\n";
+                break;
+
+            case 3:
+                if (queue.empty()) {
+                    cout << "Queue empty\n";
                 } else {
-                    cout << "Numbers: ";
-                    for (multimap<string, string>::iterator it = range.first; it != range.second; ++it) {
-                        cout << it->second << " ";
+                    cout << "Processing: " << queue.front() << endl;
+                    queue.pop_front();
+                }
+                break;
+
+            case 4:
+                if (queue.empty()) {
+                    cout << "Queue empty\n";
+                } else {
+                    cout << "Queue: ";
+                    for (int i = 0; i < queue.size(); i++) {
+                        cout << "[" << queue[i] << "] ";
                     }
                     cout << endl;
                 }
                 break;
-            }
-
-            case 3: {
-                cout << "Enter name: ";
-                cin >> name;
-                cout << "Enter phone to delete: ";
-                cin >> phone;
-                pair<multimap<string, string>::iterator, multimap<string, string>::iterator> range2;
-                range2 = phoneBook.equal_range(name);
-                bool deleted = false;
-                for (multimap<string, string>::iterator it = range2.first; it != range2.second; ++it) {
-                    if (it->second == phone) {
-                        phoneBook.erase(it);
-                        deleted = true;
-                        cout << "Deleted\n";
-                        break;
-                    }
-                }
-                if (!deleted) cout << "Not found\n";
-                break;
-            }
-
-            case 4:
-                cout << "Enter name: ";
-                cin >> name;
-                cout << "Deleted " << phoneBook.erase(name) << " entries\n";
-                break;
 
             case 5:
-                cout << "\nPhone book:\n";
-                for (multimap<string, string>::iterator it = phoneBook.begin(); it != phoneBook.end(); ++it) {
-                    cout << it->first << ": " << it->second << endl;
-                }
+                cout << "Size: " << queue.size() << endl;
                 break;
+
+            case 0:
+                break;
+            default:
+                cout << "Invalid choice\n";
         }
     } while (choice != 0);
 

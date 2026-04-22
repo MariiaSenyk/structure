@@ -20,33 +20,36 @@ int main() {
                 cin >> name;
                 cout << "Enter phone: ";
                 cin >> phone;
-                phoneBook.insert({name, phone});
+                phoneBook.insert(make_pair(name, phone));
                 cout << "Added\n";
                 break;
 
-            case 2:
+            case 2: {
                 cout << "Enter name: ";
                 cin >> name;
-                auto range = phoneBook.equal_range(name);
+                pair<multimap<string, string>::iterator, multimap<string, string>::iterator> range;
+                range = phoneBook.equal_range(name);
                 if (range.first == range.second) {
                     cout << "No entries\n";
                 } else {
                     cout << "Numbers: ";
-                    for (auto it = range.first; it != range.second; ++it) {
+                    for (multimap<string, string>::iterator it = range.first; it != range.second; ++it) {
                         cout << it->second << " ";
                     }
                     cout << endl;
                 }
                 break;
+            }
 
-            case 3:
+            case 3: {
                 cout << "Enter name: ";
                 cin >> name;
                 cout << "Enter phone to delete: ";
                 cin >> phone;
-                range = phoneBook.equal_range(name);
+                pair<multimap<string, string>::iterator, multimap<string, string>::iterator> range2;
+                range2 = phoneBook.equal_range(name);
                 bool deleted = false;
-                for (auto it = range.first; it != range.second; ++it) {
+                for (multimap<string, string>::iterator it = range2.first; it != range2.second; ++it) {
                     if (it->second == phone) {
                         phoneBook.erase(it);
                         deleted = true;
@@ -56,6 +59,7 @@ int main() {
                 }
                 if (!deleted) cout << "Not found\n";
                 break;
+            }
 
             case 4:
                 cout << "Enter name: ";
@@ -65,8 +69,8 @@ int main() {
 
             case 5:
                 cout << "\nPhone book:\n";
-                for (const auto &contact: phoneBook) {
-                    cout << contact.first << ": " << contact.second << endl;
+                for (multimap<string, string>::iterator it = phoneBook.begin(); it != phoneBook.end(); ++it) {
+                    cout << it->first << ": " << it->second << endl;
                 }
                 break;
         }
