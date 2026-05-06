@@ -39,20 +39,28 @@ void gnomeSortByPriceAsc(Product arr[], int n) {
     }
 }
 
-void linearSearchByPrice(Product arr[], int n, double target) {
-    bool found = false;
-    cout << "\nProduct search results with price " << target << ":\n";
+Product* linearSearchByPrice(Product arr[], int n, double target, int& foundCount) {
+    foundCount = 0;
     for (int i = 0; i < n; i++) {
         if (arr[i].price == target) {
-            cout << " - " << arr[i].name
-                 << ", price = " << arr[i].price
-                 << ", calories = " << arr[i].calories << " kcal\n";
-            found = true;
+            foundCount++;
         }
     }
-    if (!found) {
-        cerr << "No products with price " << target << " found.\n";
+
+    if (foundCount == 0) {
+        return nullptr;
     }
+
+    Product* foundProducts = new Product[foundCount];
+    int index = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i].price == target) {
+            foundProducts[index++] = arr[i];
+        }
+    }
+
+    return foundProducts;
 }
 
 void printProducts(Product arr[], int n, const string& title) {
@@ -83,21 +91,27 @@ int main() {
         products[i].calories = calculateCalories(products[i].nutrients);
     }
 
-    Product copyForPrice[N];
-    for (int i = 0; i < N; i++) {
-        copyForPrice[i] = products[i];
-    }
-
     selectionSortByCaloriesDesc(products, N);
     printProducts(products, N, "Sorted by calories (descending) - Selection Sort");
 
-    gnomeSortByPriceAsc(copyForPrice, N);
-    printProducts(copyForPrice, N, "Sorted by price (ascending) - Gnome Sort");
-
     double searchPrice;
-    cout << "\nEnter price to search: ";
+    cout << "\nEnter price to search in group: ";
     cin >> searchPrice;
-    linearSearchByPrice(products, N, searchPrice);
+
+    int foundCount;
+    Product* foundProducts = linearSearchByPrice(products, N, searchPrice, foundCount);
+
+    if (foundProducts != nullptr) {
+        cout << "\nProduct search results with price " << searchPrice << ":\n";
+        for (int i = 0; i < foundCount; i++) {
+            cout << " - " << foundProducts[i].name
+                 << ", price = " << foundProducts[i].price
+                 << ", calories = " << foundProducts[i].calories << " kcal\n";
+        }
+        delete[] foundProducts;
+    } else {
+        cerr << "No products with price " << searchPrice << " found.\n";
+    }
 
     return 0;
 }
