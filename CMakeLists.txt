@@ -40,4 +40,10 @@ add_library(DataStructuresAndAlgorithms STATIC library.cpp
         lab14/task2.cpp
         lab14/task3.cpp
         lab14/task4.cpp
+        lab15/task1.cpp
+        lab15/task2.cpp
+        lab15/task3.cpp
+        lab16/task1.cpp
+        lab16/task2.cpp
+        lab17/task.cpp
 )
