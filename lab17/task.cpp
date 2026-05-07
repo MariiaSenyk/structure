@@ -10,7 +10,7 @@ struct Product {
 };
 
 float calculateCalories(double nutrients[3]) {
-    return 4.0f * nutrients[0] + 9.0f * nutrients[1] + 4.0f * nutrients[2];
+    return 4.0 * nutrients[0] + 9.0 * nutrients[1] + 4.0 * nutrients[2];
 }
 
 void selectionSortByCaloriesDesc(Product arr[], int n) {
@@ -39,7 +39,7 @@ void gnomeSortByPriceAsc(Product arr[], int n) {
     }
 }
 
-Product* linearSearchByPrice(Product arr[], int n, double target, int& foundCount) {
+Product *linearSearchByPrice(Product arr[], int n, double target, int &foundCount) {
     foundCount = 0;
     for (int i = 0; i < n; i++) {
         if (arr[i].price == target) {
@@ -51,7 +51,7 @@ Product* linearSearchByPrice(Product arr[], int n, double target, int& foundCoun
         return nullptr;
     }
 
-    Product* foundProducts = new Product[foundCount];
+    Product *foundProducts = new Product[foundCount];
     int index = 0;
 
     for (int i = 0; i < n; i++) {
@@ -63,28 +63,28 @@ Product* linearSearchByPrice(Product arr[], int n, double target, int& foundCoun
     return foundProducts;
 }
 
-void printProducts(Product arr[], int n, const string& title) {
+void printProducts(Product arr[], int n, const string &title) {
     cout << "\n" << title << ":\n";
     for (int i = 0; i < n; i++) {
         cout << i + 1 << ". " << arr[i].name
-             << " | price: " << arr[i].price
-             << " | calories: " << arr[i].calories
-             << " kcal | (proteins/fats/carbs): "
-             << arr[i].nutrients[0] << "/"
-             << arr[i].nutrients[1] << "/"
-             << arr[i].nutrients[2] << endl;
+                << " | price: " << arr[i].price
+                << " | calories: " << arr[i].calories
+                << " kcal | (proteins/fats/carbs): "
+                << arr[i].nutrients[0] << "/"
+                << arr[i].nutrients[1] << "/"
+                << arr[i].nutrients[2] << endl;
     }
 }
 
 int main() {
     const int N = 6;
     Product products[N] = {
-        {"Chicken breast", 31.0,  {23.0, 1.5, 0.0}, 0},
-        {"Butter",         120.0,  {0.8, 82.5, 0.8}, 0},
-        {"Rice",           45.0,  {7.0, 0.7, 78.9}, 0},
-        {"Egg",           15.0,  {12.7, 11.5, 0.7}, 0},
-        {"Almonds",       250.0,  {21.2, 49.9, 21.7}, 0},
-        {"Apple",          15.0,  {0.4, 0.4, 14.0}, 0}
+        {"Chicken breast", 31.0, {23.0, 1.5, 0.0}, 0},
+        {"Butter", 120.0, {0.8, 82.5, 0.8}, 0},
+        {"Rice", 45.0, {7.0, 0.7, 78.9}, 0},
+        {"Egg", 15.0, {12.7, 11.5, 0.7}, 0},
+        {"Almonds", 250.0, {21.2, 49.9, 21.7}, 0},
+        {"Apple", 15.0, {0.4, 0.4, 14.0}, 0}
     };
 
     for (int i = 0; i < N; i++) {
@@ -93,20 +93,26 @@ int main() {
 
     selectionSortByCaloriesDesc(products, N);
     printProducts(products, N, "Sorted by calories (descending) - Selection Sort");
+    Product productCopy[N];
+    for (int i = 0; i < N; i++) {
+        productCopy[i] = products[i];
+    }
+    gnomeSortByPriceAsc(productCopy, N);
+    printProducts(productCopy, N, "Sorted by price (ascending) - Gnome Sort(copy)");
 
     double searchPrice;
     cout << "\nEnter price to search in group: ";
     cin >> searchPrice;
 
     int foundCount;
-    Product* foundProducts = linearSearchByPrice(products, N, searchPrice, foundCount);
+    Product *foundProducts = linearSearchByPrice(products, N, searchPrice, foundCount);
 
     if (foundProducts != nullptr) {
         cout << "\nProduct search results with price " << searchPrice << ":\n";
         for (int i = 0; i < foundCount; i++) {
             cout << " - " << foundProducts[i].name
-                 << ", price = " << foundProducts[i].price
-                 << ", calories = " << foundProducts[i].calories << " kcal\n";
+                    << ", price = " << foundProducts[i].price
+                    << ", calories = " << foundProducts[i].calories << " kcal\n";
         }
         delete[] foundProducts;
     } else {
