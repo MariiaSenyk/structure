@@ -54,4 +54,6 @@ add_library(DataStructuresAndAlgorithms STATIC library.cpp
         lab18-19/task6.cpp
         lab20/task1.cpp
         lab20/task2.cpp
+        lab21/task1.cpp
+        lab21/task2.cpp
 )
